@@ -1,4 +1,4 @@
-package org.zxx17.zsrpc.scanner;
+package org.zxx17.zsrpc.common.scanner;
 
 import java.io.File;
 import java.io.IOException;

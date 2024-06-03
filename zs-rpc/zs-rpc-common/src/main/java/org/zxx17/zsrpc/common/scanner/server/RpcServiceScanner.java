@@ -1,9 +1,9 @@
-package org.zxx17.zsrpc.scanner.server;
+package org.zxx17.zsrpc.common.scanner.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.annotation.RpcService;
-import org.zxx17.zsrpc.scanner.ClassScanner;
+import org.zxx17.zsrpc.common.scanner.ClassScanner;
 
 import java.util.HashMap;
 import java.util.List;

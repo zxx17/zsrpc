@@ -1,9 +1,9 @@
 package org.zxx17.zsrpc.test;
 
 import org.junit.Test;
-import org.zxx17.zsrpc.scanner.ClassScanner;
-import org.zxx17.zsrpc.scanner.reference.RpcReferenceScanner;
-import org.zxx17.zsrpc.scanner.server.RpcServiceScanner;
+import org.zxx17.zsrpc.common.scanner.ClassScanner;
+import org.zxx17.zsrpc.common.scanner.reference.RpcReferenceScanner;
+import org.zxx17.zsrpc.common.scanner.server.RpcServiceScanner;
 
 import java.util.List;
 

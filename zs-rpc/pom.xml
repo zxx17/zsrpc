@@ -13,6 +13,8 @@
         <module>zs-rpc-common</module>
         <module>zs-rpc-test</module>
         <module>zs-rpc-provider</module>
+        <module>zs-rpc-constant</module>
+        <module>zs-rpc-protocol</module>
     </modules>
 
     <properties>

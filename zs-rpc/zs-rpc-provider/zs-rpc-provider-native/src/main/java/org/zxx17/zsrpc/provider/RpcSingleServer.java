@@ -3,7 +3,7 @@ package org.zxx17.zsrpc.provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.provider.common.server.base.BaseServer;
-import org.zxx17.zsrpc.scanner.server.RpcServiceScanner;
+import org.zxx17.zsrpc.common.scanner.server.RpcServiceScanner;
 
 /**
  * 作为使用Java方式，不依赖Spring启动rpc框架的类
