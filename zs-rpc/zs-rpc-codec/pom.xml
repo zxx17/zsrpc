@@ -2,20 +2,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
     <parent>
+        <artifactId>zs-rpc</artifactId>
         <groupId>org.zxx17</groupId>
-        <artifactId>zs-rpc-provider</artifactId>
         <version>1.0.0</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>zs-rpc-provider-common</artifactId>
+    <artifactId>zs-rpc-codec</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-codec</artifactId>
+            <artifactId>zs-rpc-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-serialization-jdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 </project>

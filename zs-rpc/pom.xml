@@ -15,6 +15,8 @@
         <module>zs-rpc-provider</module>
         <module>zs-rpc-constant</module>
         <module>zs-rpc-protocol</module>
+        <module>zs-rpc-serialization</module>
+        <module>zs-rpc-codec</module>
     </modules>
 
     <properties>
@@ -37,6 +39,7 @@
         <kyro.version>5.2.0</kyro.version>
         <fst.version>2.57</fst.version>
         <spring.boot.version>3.2.6</spring.boot.version>
+        <fastjson2.version>2.0.51</fastjson2.version>
     </properties>
 
     <dependencies>
@@ -124,6 +127,14 @@
             <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+
+        <!-- fastjson2 -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>${fastjson2.version}</version>
+        </dependency>
+
 
     </dependencies>
 

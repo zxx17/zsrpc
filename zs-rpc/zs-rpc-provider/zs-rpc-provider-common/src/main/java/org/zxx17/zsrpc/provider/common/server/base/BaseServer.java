@@ -13,6 +13,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zxx17.zsrpc.codec.RpcDecoder;
+import org.zxx17.zsrpc.codec.RpcEncoder;
 import org.zxx17.zsrpc.provider.common.handler.RpcProviderHandler;
 import org.zxx17.zsrpc.provider.common.server.api.Server;
 
@@ -67,10 +69,9 @@ public class BaseServer implements Server {
                             // 配置Channel的处理管道，包括添加编解码器和业务处理handler
                             channel.pipeline()
                                     // 添加字符串解码器
-                                    //TODO 预留编解码，需要实现自定义协议
-                                    .addLast(new StringDecoder())
+                                    .addLast(new RpcDecoder())
                                     // 添加字符串编码器
-                                    .addLast(new StringEncoder())
+                                    .addLast(new RpcEncoder())
                                     // 添加RPC服务提供者处理器
                                     .addLast(new RpcProviderHandler(handlerMap));
                         }
