@@ -17,6 +17,7 @@
         <module>zs-rpc-protocol</module>
         <module>zs-rpc-serialization</module>
         <module>zs-rpc-codec</module>
+        <module>zs-rpc-consumer</module>
     </modules>
 
     <properties>
