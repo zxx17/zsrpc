@@ -4,10 +4,13 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import net.sf.cglib.reflect.FastClass;
+import net.sf.cglib.reflect.FastMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.common.helper.RpcServiceHelper;
 import org.zxx17.zsrpc.common.threadpool.ServerThreadPool;
+import org.zxx17.zsrpc.constant.RpcConstants;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.enumeration.RpcStatus;
 import org.zxx17.zsrpc.protocol.enumeration.RpcType;
@@ -15,6 +18,7 @@ import org.zxx17.zsrpc.protocol.header.RpcHeader;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.protocol.response.RpcResponse;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -25,9 +29,19 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     private final Logger logger = LoggerFactory.getLogger(RpcProviderHandler.class);
 
+    /**
+     * 用于存放提供服务的对象，key是className+Version+Group
+     */
     private final Map<String, Object> handlerMap;
 
-    public RpcProviderHandler(Map<String, Object> handlerMap) {
+    /**
+     * 反射或者CGLIB
+     */
+    private final String reflectType;
+
+
+    public RpcProviderHandler(Map<String, Object> handlerMap, String reflectType) {
+        this.reflectType = reflectType;
         this.handlerMap = handlerMap;
     }
 
@@ -120,6 +134,28 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     private Object invokeMethod(Object targetService,
                                 Class<?> serviceClass, String methodName,
                                 Class<?>[] parameterTypes, Object[] parameters) throws Throwable {
+        return switch (this.reflectType) {
+            case RpcConstants.REFLECT_TYPE_JDK ->
+                    this.invokeJDKMethod(targetService, serviceClass, methodName, parameterTypes, parameters);
+            case RpcConstants.REFLECT_TYPE_CGLIB ->
+                    this.invokeCGLibMethod(targetService, serviceClass, methodName, parameterTypes, parameters);
+            default -> throw new IllegalArgumentException("not support reflect type");
+        };
+    }
+
+    private Object invokeCGLibMethod(Object targetService, Class<?> serviceClass,
+                                     String methodName, Class<?>[] parameterTypes,
+                                     Object[] parameters) throws InvocationTargetException {
+        logger.info("ZS-RPC use cglib reflect type invoke method...");
+        FastClass serviceFastClass = FastClass.create(serviceClass);
+        FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
+        return serviceFastMethod.invoke(targetService, parameters);
+    }
+
+    private Object invokeJDKMethod(Object targetService, Class<?> serviceClass,
+                                   String methodName, Class<?>[] parameterTypes,
+                                   Object[] parameters) throws Throwable {
+        logger.info("ZS-RPC use jdk reflect type invoke method...");
         Method method = serviceClass.getMethod(methodName, parameterTypes);
         method.setAccessible(true);
         return method.invoke(targetService, parameters);

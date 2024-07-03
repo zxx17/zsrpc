@@ -25,22 +25,34 @@ public class BaseServer implements Server {
 
     private final Logger logger = LoggerFactory.getLogger(BaseServer.class);
 
-    // 主机域名或者IP地址
+    /**
+     * 服务器地址
+     */
     protected String host = "127.0.0.1";
 
-    // 端口号
+    /**
+     * 服务器端口
+     */
     protected int port = 27110;
 
-    // 存储的是实体类关系
+    /**
+     * 用于存放提供服务的对象，key是className+Version+Group
+     */
     protected Map<String, Object> handlerMap = new HashMap<>();
 
+    /**
+     * 反射类型
+     */
+    private final String reflectType;
 
-    public BaseServer(String serverAddress){
-        if (!StringUtils.isEmpty(serverAddress)){
+
+    public BaseServer(String serverAddress, String reflectType) {
+        if (!StringUtils.isEmpty(serverAddress)) {
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
             this.port = Integer.parseInt(serverArray[1]);
         }
+        this.reflectType = reflectType;
     }
 
     /**
@@ -54,7 +66,7 @@ public class BaseServer implements Server {
         // 创建用于接收连接的事件循环组
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         // 创建用于处理连接读写事件的事件循环组
-        EventLoopGroup workerGroup  = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             // 配置服务器启动对象
             ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -73,7 +85,7 @@ public class BaseServer implements Server {
                                     // 添加字符串编码器
                                     .addLast(new RpcEncoder())
                                     // 添加RPC服务提供者处理器
-                                    .addLast(new RpcProviderHandler(handlerMap));
+                                    .addLast(new RpcProviderHandler(handlerMap, reflectType));
                         }
                     })
                     // 配置服务器的其他选项，如连接队列大小和保持活动状态

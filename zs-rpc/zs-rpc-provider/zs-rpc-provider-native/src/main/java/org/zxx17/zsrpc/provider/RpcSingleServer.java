@@ -11,8 +11,8 @@ import org.zxx17.zsrpc.common.scanner.server.RpcServiceScanner;
 public class RpcSingleServer extends BaseServer {
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);
 
-    public RpcSingleServer(String serverAddress, String scanPackage) {
-        super(serverAddress);
+    public RpcSingleServer(String serverAddress, String scanPackage, String reflectType) {
+        super(serverAddress, reflectType);
         try {
             this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(scanPackage);
         }catch (Exception e) {
