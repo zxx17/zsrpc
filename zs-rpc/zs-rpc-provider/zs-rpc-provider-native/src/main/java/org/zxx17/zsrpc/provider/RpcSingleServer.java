@@ -16,7 +16,7 @@ public class RpcSingleServer extends BaseServer {
         try {
             this.handlerMap = RpcServiceScanner.doScannerWithRpcServiceAnnotationFilterAndRegistryService(scanPackage);
         }catch (Exception e) {
-            logger.error("RPC Server init error", e);
+            logger.error("ZS-RPC Server init error", e);
         }
     }
 }

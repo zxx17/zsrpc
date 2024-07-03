@@ -21,11 +21,6 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
 
     private final Logger logger = LoggerFactory.getLogger(RpcTestConsumerHandler.class);
 
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx,
-                                RpcProtocol<RpcResponse> protocol) throws Exception {
-        logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
-    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -35,7 +30,7 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
         protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk"));
         RpcRequest request = new RpcRequest();
         request.setClassName("org.zxx17.zsrpc.test.api.DemoService");
-        request.setGroup("zxx17");
+        request.setGroup("test");
         request.setMethodName("hello");
         request.setParameters(new Object[]{"zxx17"});
         request.setParameterTypes(new Class[]{String.class});
@@ -48,6 +43,10 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
         logger.info("发送数据完毕...");
     }
 
-
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx,
+                                RpcProtocol<RpcResponse> protocol) throws Exception {
+        logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
+    }
 
 }

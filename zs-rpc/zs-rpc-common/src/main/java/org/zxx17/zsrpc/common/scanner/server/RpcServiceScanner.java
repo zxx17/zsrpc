@@ -3,6 +3,7 @@ package org.zxx17.zsrpc.common.scanner.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.annotation.RpcService;
+import org.zxx17.zsrpc.common.helper.RpcServiceHelper;
 import org.zxx17.zsrpc.common.scanner.ClassScanner;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class RpcServiceScanner extends ClassScanner {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RpcServiceScanner.class);
+    private static final Logger logger = LoggerFactory.getLogger(RpcServiceScanner.class);
 
 
     /**
@@ -46,11 +47,11 @@ public class RpcServiceScanner extends ClassScanner {
 //                    LOGGER.info("group===>>> " + rpcService.group());
                     String serviceName = getServiceName(rpcService);
                     // key = service+version+group
-                    String key = serviceName.concat(rpcService.version()).concat(rpcService.group());
+                    String key = RpcServiceHelper.buildServiceKey(serviceName, rpcService.version(), rpcService.group());
                     handlerMap.put(key, clazz.getDeclaredConstructor().newInstance());
                 }
             } catch (Exception e) {
-                LOGGER.error("scan classes throws exception: {}", e);
+                logger.error("ZS-RPC scan classes throws exception: {}", e);
             }
         });
         return handlerMap;
