@@ -14,17 +14,17 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 /**
- * 定义一个RPCFuture类，继承自Java内置的CompletableFuture类，用于处理远程过程调用（RPC）的异步结果。.
+ * 定义一个RpcFuture类，继承自Java内置的CompletableFuture类，用于处理远程过程调用（RPC）的异步结果。.
  *
  * @author Xinxuan Zhuo
  * @version 1.0.0
  * @since 2024/7/5
  **/
-public class RPCFuture extends CompletableFuture<Object> {
+public class RpcFuture extends CompletableFuture<Object> {
 
-    private static final Logger logger = LoggerFactory.getLogger(RPCFuture.class);
+    private static final Logger logger = LoggerFactory.getLogger(RpcFuture.class);
 
-    // 同步管理器，用于控制RPCFuture的完成状态。
+    // 同步管理器，用于控制RpcFuture的完成状态。
     private Sync sync;
 
     // RPC请求协议对象，封装了RPC请求的数据和元信息。
@@ -40,22 +40,22 @@ public class RPCFuture extends CompletableFuture<Object> {
     private long responseTimeThreshold = 5000;
 
     // 构造函数，接收RPC请求协议作为参数，初始化同步管理器和开始时间。
-    public RPCFuture(RpcProtocol<RpcRequest> requestRpcProtocol) {
+    public RpcFuture(RpcProtocol<RpcRequest> requestRpcProtocol) {
         this.requestRpcProtocol = requestRpcProtocol;
         this.sync = new Sync();
         this.startTime = System.currentTimeMillis();
     }
 
-    // 重写isDone方法，检查RPCFuture是否已完成。
+    // 重写isDone方法，检查RpcFuture是否已完成。
     @Override
     public boolean isDone() {
         return sync.isDone();
     }
 
-    // 重写get方法，等待RPCFuture完成并返回结果。
+    // 重写get方法，等待RpcFuture完成并返回结果。
     @Override
     public Object get() throws InterruptedException, ExecutionException {
-        // 获取锁，直到RPCFuture完成。
+        // 获取锁，直到RpcFuture完成。
         sync.acquire(-1);
         // 如果有响应，则返回响应体中的结果；否则返回null。
         if (this.responseRpcProtocol != null) {
@@ -66,7 +66,7 @@ public class RPCFuture extends CompletableFuture<Object> {
         }
     }
 
-    // 重写get方法，等待RPCFuture在指定时间内完成并返回结果，超时则抛出异常。
+    // 重写get方法，等待RpcFuture在指定时间内完成并返回结果，超时则抛出异常。
     @Override
     public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         // 尝试在指定时间内获取锁，超时则抛出异常。
@@ -86,13 +86,13 @@ public class RPCFuture extends CompletableFuture<Object> {
         }
     }
 
-    // 重写isCancelled方法，由于RPCFuture不支持取消操作，抛出不支持的操作异常。
+    // 重写isCancelled方法，由于RpcFuture不支持取消操作，抛出不支持的操作异常。
     @Override
     public boolean isCancelled() {
         throw new UnsupportedOperationException();
     }
 
-    // 重写cancel方法，由于RPCFuture不支持取消操作，抛出不支持的操作异常。
+    // 重写cancel方法，由于RpcFuture不支持取消操作，抛出不支持的操作异常。
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
         throw new UnsupportedOperationException();
@@ -101,7 +101,7 @@ public class RPCFuture extends CompletableFuture<Object> {
     // 当RPC调用完成时调用此方法，设置响应协议并释放锁。
     public void done(RpcProtocol<RpcResponse> responseRpcProtocol) {
         this.responseRpcProtocol = responseRpcProtocol;
-        // 释放锁，表示RPCFuture已完成。
+        // 释放锁，表示RpcFuture已完成。
         sync.release(1);
         // Threshold
         // 计算响应时间，如果超过阈值，记录警告日志。
@@ -130,7 +130,7 @@ public class RPCFuture extends CompletableFuture<Object> {
             return getState() == done;
         }
 
-        // 尝试释放锁，如果状态为pending且能成功设置为done则返回true，表示RPCFuture已完成。
+        // 尝试释放锁，如果状态为pending且能成功设置为done则返回true，表示RpcFuture已完成。
         protected boolean tryRelease(int releases) {
             if (getState() == pending) {
                 return compareAndSetState(pending, done);
@@ -138,7 +138,7 @@ public class RPCFuture extends CompletableFuture<Object> {
             return false;
         }
 
-        // 检查RPCFuture是否已完成。
+        // 检查RpcFuture是否已完成。
         public boolean isDone() {
             return getState() == done;
         }

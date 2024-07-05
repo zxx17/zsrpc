@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zxx17.zsrpc.consumer.common.future.RPCFuture;
+import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
 import org.zxx17.zsrpc.consumer.common.initializer.RpcConsumerInitializer;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
@@ -58,7 +58,7 @@ public class RpcConsumer {
     /**
      * 向服务提供者发送请求 并获取响应
      */
-    public RPCFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws InterruptedException {
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws InterruptedException {
         //TODO 先写死，后面在引入注册中心时，从注册中心获取
         String serviceAddress = "127.0.0.1";
         int port = 27880;
@@ -74,7 +74,9 @@ public class RpcConsumer {
             handler = getRpcConsumerHandler(serviceAddress, port);
             handlerMap.put(key, handler);
         }
-        return handler.sendRequest(protocol);
+        return handler.sendRequest(protocol,
+                protocol.getBody().getAsync(),
+                protocol.getBody().getOneway());
     }
 
     /**
