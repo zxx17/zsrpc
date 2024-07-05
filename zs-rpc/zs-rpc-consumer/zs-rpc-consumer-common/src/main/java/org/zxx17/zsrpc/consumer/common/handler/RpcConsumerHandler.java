@@ -8,11 +8,15 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zxx17.zsrpc.consumer.common.future.RPCFuture;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
+import org.zxx17.zsrpc.protocol.header.RpcHeader;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.protocol.response.RpcResponse;
 
 import java.net.SocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 定义了Channel类型的成员变量channel和SocketAddress类型的成员变量remotePeer，
@@ -32,8 +36,20 @@ import java.net.SocketAddress;
 public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<RpcResponse>> {
 
     private final Logger logger = LoggerFactory.getLogger(RpcConsumerHandler.class);
+
+    /**
+     * channel
+     */
     private volatile Channel channel;
+    /**
+     * remotePeer
+     */
     private SocketAddress remotePeer;
+
+    /**
+     * 存储请求ID和响应对象
+     */
+    private Map<Long, RPCFuture> pendingRPC = new ConcurrentHashMap<>();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -51,12 +67,29 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext,
                                 RpcProtocol<RpcResponse> protocol) throws Exception {
+        if (protocol == null){
+            return;
+        }
         logger.info("服务消费者接收到的数据===>>>{}", JSONObject.toJSONString(protocol));
+        long requestId = protocol.getHeader().getRequestId();
+        RPCFuture rpcFuture = pendingRPC.remove(requestId);
+        if (rpcFuture != null){
+            rpcFuture.done(protocol);
+        }
     }
 
-    public void sendRequest(RpcProtocol<RpcRequest> protocol) {
+    public RPCFuture sendRequest(RpcProtocol<RpcRequest> protocol) {
         logger.info("服务消费者发送的数据===>>>{}", JSONObject.toJSONString(protocol));
+        RPCFuture rpcFuture = this.getRpcFuture(protocol);
         channel.writeAndFlush(protocol);
+        return rpcFuture;
+    }
+
+    private RPCFuture getRpcFuture(RpcProtocol<RpcRequest> protocol) {
+        RPCFuture rpcFuture = new RPCFuture(protocol);
+        long requestId = protocol.getHeader().getRequestId();
+        pendingRPC.put(requestId, rpcFuture);
+        return rpcFuture;
     }
 
     public void close() {

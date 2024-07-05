@@ -1,7 +1,11 @@
 package org.zxx17.zsrpc.test.consumer.handler;
 
 import com.alibaba.fastjson2.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.consumer.common.RpcConsumer;
+import org.zxx17.zsrpc.consumer.common.future.RPCFuture;
+import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.header.RpcHeaderFactory;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
@@ -14,9 +18,11 @@ import org.zxx17.zsrpc.protocol.request.RpcRequest;
  * @since 2024/7/3
  **/
 public class RpcConsumerHandlerTest {
+
     public static void main(String[] args) throws Exception {
         RpcConsumer rpcConsumer = RpcConsumer.getInstance();
-        rpcConsumer.sendRequest(getRpcRequestProtocol());
+        RPCFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
+        System.out.println("测试消费者直接请求后直接获取数据===>" + JSONObject.toJSONString(rpcFuture.get()));
         Thread.sleep(2000);
         rpcConsumer.close();
     }

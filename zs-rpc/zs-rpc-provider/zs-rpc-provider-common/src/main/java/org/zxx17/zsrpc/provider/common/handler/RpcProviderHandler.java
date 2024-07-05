@@ -130,7 +130,8 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     /**
      * 通过反射技术调用具体的方法
-     * TODO 消费者端请求头也指定了序列化方法，目前序列化方法是提供者启动的参数指定。后续应该是： 优先消费者端指定，不传则使用提供者，默认和Spring的代理一样
+     * TODO 消费者端请求头也指定了序列化方法，目前序列化方法是提供者启动的参数指定。
+     * TODO 后续应该是： 优先消费者端指定，不传则使用提供者，默认和Spring的代理一样
      *
      */
     private Object invokeMethod(Object targetService,
