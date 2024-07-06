@@ -8,6 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zxx17.zsrpc.common.threadpool.ClientThreadPool;
 import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
 import org.zxx17.zsrpc.consumer.common.initializer.RpcConsumerInitializer;
@@ -53,6 +54,7 @@ public class RpcConsumer {
 
     public void close() {
         eventLoopGroup.shutdownGracefully();
+        ClientThreadPool.shutdown();
     }
 
     /**

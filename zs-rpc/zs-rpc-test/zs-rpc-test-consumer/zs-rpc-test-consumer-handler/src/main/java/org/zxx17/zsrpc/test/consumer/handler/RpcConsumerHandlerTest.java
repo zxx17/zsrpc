@@ -1,9 +1,11 @@
 package org.zxx17.zsrpc.test.consumer.handler;
 
 import com.alibaba.fastjson2.JSONObject;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.consumer.common.RpcConsumer;
+import org.zxx17.zsrpc.consumer.common.callback.AsyncRpcCallBack;
 import org.zxx17.zsrpc.consumer.common.context.RpcContext;
 import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
@@ -30,6 +32,25 @@ public class RpcConsumerHandlerTest {
         rpcConsumer.close();
     }
 
+    @Test
+    public void testAsyncCallBack() throws Exception {
+        RpcConsumer rpcConsumer = RpcConsumer.getInstance();
+        RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
+        rpcFuture.addAsyncCallBack(new AsyncRpcCallBack() {
+            @Override
+            public void onSuccess(Object result) {
+                System.out.println("异步回调成功===>" + result);
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                System.out.println("异步回调失败===>" + throwable);
+            }
+        });
+        Thread.sleep(200);
+        rpcConsumer.close();
+    }
+
     private static RpcProtocol<RpcRequest> getRpcRequestProtocol() {
         //模拟发送数据
         RpcProtocol<RpcRequest> protocol = new RpcProtocol<RpcRequest>();
@@ -42,7 +63,7 @@ public class RpcConsumerHandlerTest {
         request.setParameterTypes(new Class[]{String.class});
         request.setVersion("1.0.0");
         request.setAsync(false);
-        request.setOneway(true);
+        request.setOneway(false);
 
         protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk"));
         protocol.setBody(request);

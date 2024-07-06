@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.codec.RpcDecoder;
 import org.zxx17.zsrpc.codec.RpcEncoder;
+import org.zxx17.zsrpc.common.threadpool.ServerThreadPool;
 import org.zxx17.zsrpc.provider.common.handler.RpcProviderHandler;
 import org.zxx17.zsrpc.provider.common.server.api.Server;
 
@@ -104,6 +105,7 @@ public class BaseServer implements Server {
             // 关闭事件循环组，释放资源
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
+            ServerThreadPool.shutdown();
         }
     }
 
