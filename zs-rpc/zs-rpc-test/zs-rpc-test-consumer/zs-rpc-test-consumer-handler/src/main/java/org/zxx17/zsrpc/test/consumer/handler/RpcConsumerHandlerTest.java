@@ -5,13 +5,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.consumer.common.RpcConsumer;
-import org.zxx17.zsrpc.consumer.common.callback.AsyncRpcCallBack;
 import org.zxx17.zsrpc.consumer.common.context.RpcContext;
-import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.header.RpcHeaderFactory;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
+import org.zxx17.zsrpc.proxy.api.callback.AsyncRpcCallBack;
+import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
 
 /**
  * 测试服务消费者.
@@ -33,7 +33,7 @@ public class RpcConsumerHandlerTest {
     }
 
     @Test
-    public void testAsyncCallBack() throws Exception {
+    public void testConsumerAsyncCallBack() throws Exception {
         RpcConsumer rpcConsumer = RpcConsumer.getInstance();
         RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
         rpcFuture.addAsyncCallBack(new AsyncRpcCallBack() {

@@ -1,6 +1,7 @@
 package org.zxx17.zsrpc.consumer.common.context;
 
-import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
+
+import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
 
 /**
  * 管理RPC（远程过程调用）上下文的工具类，主要用于在分布式系统中处理远程调用时的请求和响应.

@@ -23,6 +23,12 @@
             <artifactId>zs-rpc-codec</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-proxy-jdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

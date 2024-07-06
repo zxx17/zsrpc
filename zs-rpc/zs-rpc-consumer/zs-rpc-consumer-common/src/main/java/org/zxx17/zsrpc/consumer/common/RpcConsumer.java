@@ -9,11 +9,12 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.common.threadpool.ClientThreadPool;
-import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
 import org.zxx17.zsrpc.consumer.common.initializer.RpcConsumerInitializer;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
+import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
+import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0.0
  * @since 2024/7/3
  **/
-public class RpcConsumer {
+public class RpcConsumer implements Consumer {
     private final Logger logger = LoggerFactory.getLogger(RpcConsumer.class);
     private final Bootstrap bootstrap;
     private final EventLoopGroup eventLoopGroup;
@@ -60,6 +61,7 @@ public class RpcConsumer {
     /**
      * 向服务提供者发送请求 并获取响应
      */
+    @Override
     public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws InterruptedException {
         //TODO 先写死，后面在引入注册中心时，从注册中心获取
         String serviceAddress = "127.0.0.1";

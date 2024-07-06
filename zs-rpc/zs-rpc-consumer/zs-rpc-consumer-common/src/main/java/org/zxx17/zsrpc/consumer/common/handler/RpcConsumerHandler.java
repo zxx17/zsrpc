@@ -9,11 +9,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.consumer.common.context.RpcContext;
-import org.zxx17.zsrpc.consumer.common.future.RpcFuture;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.header.RpcHeader;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.protocol.response.RpcResponse;
+import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
 
 import java.net.SocketAddress;
 import java.util.Map;

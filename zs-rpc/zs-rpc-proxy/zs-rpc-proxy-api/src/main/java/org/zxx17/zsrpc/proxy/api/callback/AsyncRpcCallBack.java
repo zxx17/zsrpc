@@ -1,4 +1,4 @@
-package org.zxx17.zsrpc.consumer.common.callback;
+package org.zxx17.zsrpc.proxy.api.callback;
 
 /**
  * 异步RPC请求回调.

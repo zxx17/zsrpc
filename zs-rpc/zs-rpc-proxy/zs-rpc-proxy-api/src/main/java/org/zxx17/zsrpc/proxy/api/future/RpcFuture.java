@@ -1,12 +1,12 @@
-package org.zxx17.zsrpc.consumer.common.future;
+package org.zxx17.zsrpc.proxy.api.future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.common.threadpool.ClientThreadPool;
-import org.zxx17.zsrpc.consumer.common.callback.AsyncRpcCallBack;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.protocol.response.RpcResponse;
+import org.zxx17.zsrpc.proxy.api.callback.AsyncRpcCallBack;
 
 import java.io.Serial;
 import java.util.ArrayList;

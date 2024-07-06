@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.zxx17</groupId>
-        <artifactId>zs-rpc-proxy</artifactId>
+        <artifactId>zs-rpc-test-consumer</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>zs-rpc-proxy-api</artifactId>
+    <artifactId>zs-rpc-test-consumer-native</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -17,12 +17,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-protocol</artifactId>
+            <artifactId>zs-rpc-consumer-native</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-test-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
 </project>

@@ -14,6 +14,7 @@
     <modules>
         <module>zs-rpc-test-consumer-codec</module>
         <module>zs-rpc-test-consumer-handler</module>
+        <module>zs-rpc-test-consumer-native</module>
     </modules>
 
     <properties>
