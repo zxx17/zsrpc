@@ -1,6 +1,8 @@
 package org.zxx17.zsrpc.proxy.jdk;
 
 
+import org.zxx17.zsrpc.proxy.api.BaseProxyFactory;
+import org.zxx17.zsrpc.proxy.api.ProxyFactory;
 import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
 import org.zxx17.zsrpc.proxy.api.object.ObjectProxy;
 
@@ -13,7 +15,7 @@ import java.lang.reflect.Proxy;
  * @version 1.0.0
  * @since 2024/7/6
  **/
-public class JdkProxyFactory<T> {
+public class JdkProxyFactory<T> extends BaseProxyFactory<T> implements ProxyFactory {
     /**
      * 服务版本号
      */
@@ -44,6 +46,9 @@ public class JdkProxyFactory<T> {
      */
     private boolean oneway;
 
+    public JdkProxyFactory() {
+    }
+
     public JdkProxyFactory(String serviceVersion, String serviceGroup, String serializationType, long timeout, Consumer consumer, boolean async, boolean oneway) {
         this.serviceVersion = serviceVersion;
         this.timeout = timeout;
@@ -54,12 +59,15 @@ public class JdkProxyFactory<T> {
         this.oneway = oneway;
     }
 
+    @Override
     public <T> T getProxy(Class<T> clazz) {
         return (T) Proxy.newProxyInstance(
                 clazz.getClassLoader(),
                 new Class<?>[]{clazz},
-                new ObjectProxy<T>(clazz, serviceVersion, serviceGroup, serializationType, timeout, consumer, async, oneway)
+                objectProxy
         );
     }
+
+
 
 }

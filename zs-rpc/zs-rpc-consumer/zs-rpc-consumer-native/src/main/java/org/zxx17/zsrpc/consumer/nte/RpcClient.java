@@ -3,6 +3,10 @@ package org.zxx17.zsrpc.consumer.nte;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.consumer.common.RpcConsumer;
+import org.zxx17.zsrpc.proxy.api.ProxyFactory;
+import org.zxx17.zsrpc.proxy.api.async.IAsyncObjectProxy;
+import org.zxx17.zsrpc.proxy.api.config.ProxyConfig;
+import org.zxx17.zsrpc.proxy.api.object.ObjectProxy;
 import org.zxx17.zsrpc.proxy.jdk.JdkProxyFactory;
 
 /**
@@ -49,9 +53,15 @@ public class RpcClient {
     }
 
     public <T> T create(Class<T> interfaceClass) {
-        JdkProxyFactory<T> jdkProxyFactory = new JdkProxyFactory<T>(serviceVersion, serviceGroup,
+        ProxyFactory proxyFactory = new JdkProxyFactory<T>();
+        proxyFactory.init(new ProxyConfig(interfaceClass, serviceVersion, serviceGroup,
+                timeout, RpcConsumer.getInstance(), serializationType, async, oneway));
+        return proxyFactory.getProxy(interfaceClass);
+    }
+
+    public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass){
+        return new ObjectProxy<T>(interfaceClass, serviceVersion, serviceGroup,
                 serializationType, timeout, RpcConsumer.getInstance(), async, oneway);
-        return jdkProxyFactory.getProxy(interfaceClass);
     }
 
     public void shutdown() {

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
 import org.zxx17.zsrpc.protocol.header.RpcHeaderFactory;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
+import org.zxx17.zsrpc.proxy.api.async.IAsyncObjectProxy;
 import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
 import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
 
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2024/7/6
  **/
-public class ObjectProxy<T> implements InvocationHandler {
+public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
 
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectProxy.class);
@@ -137,6 +138,66 @@ public class ObjectProxy<T> implements InvocationHandler {
         // 如果设置了超时时间timeout，等待最多timeout毫秒获取结果
         // 否则，无限制地等待结果
         return rpcFuture == null ? null : timeout > 0 ? rpcFuture.get(timeout, TimeUnit.MILLISECONDS) : rpcFuture.get();
+    }
+
+
+    /**
+     * 动态代理异步调用
+     * @param method 方法名
+     * @param args 参数
+     * @return RpcFuture
+     */
+    @Override
+    public RpcFuture call(String method, Object... args) {
+        RpcProtocol<RpcRequest> rpcProtocol = createRpcProtocol(clazz.getName(), method, args);
+        RpcFuture future = null;
+        try {
+            future = this.consumer.sendRequest(rpcProtocol);
+        }catch (Exception e){
+           logger.error("async call exception: {}", e);
+        }
+        return future;
+    }
+
+
+    private RpcProtocol<RpcRequest> createRpcProtocol(String className, String methodName, Object[] args) {
+        RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<RpcRequest>();
+        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType));
+        RpcRequest request = new RpcRequest();
+        request.setClassName(className);
+        request.setMethodName(methodName);
+        request.setParameters(args);
+        request.setVersion(this.serviceVersion);
+        request.setGroup(this.serviceGroup);
+
+        Class[] parameterTypes = new Class[args.length];
+        for (int i = 0; i < args.length; i++) {
+            parameterTypes[i] = args[i].getClass();
+        }
+        request.setParameterTypes(parameterTypes);
+        requestRpcProtocol.setBody(request);
+
+        return requestRpcProtocol;
+    }
+
+
+    /**
+     * 返回传入的类型
+     */
+    private Class<?> getClassType(Object obj){
+        Class<?> classType = obj.getClass();
+        String typeName = classType.getName();
+        return switch (typeName) {
+            case "java.lang.Integer" -> Integer.TYPE;
+            case "java.lang.Long" -> Long.TYPE;
+            case "java.lang.Float" -> Float.TYPE;
+            case "java.lang.Double" -> Double.TYPE;
+            case "java.lang.Character" -> Character.TYPE;
+            case "java.lang.Boolean" -> Boolean.TYPE;
+            case "java.lang.Short" -> Short.TYPE;
+            case "java.lang.Byte" -> Byte.TYPE;
+            default -> classType;
+        };
     }
 
     /**
