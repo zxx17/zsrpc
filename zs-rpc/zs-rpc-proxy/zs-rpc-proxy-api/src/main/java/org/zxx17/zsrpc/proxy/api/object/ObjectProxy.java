@@ -160,48 +160,31 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
     }
 
 
+    /**
+     * 创建RPC请求协议
+     */
     private RpcProtocol<RpcRequest> createRpcProtocol(String className, String methodName, Object[] args) {
         RpcProtocol<RpcRequest> requestRpcProtocol = new RpcProtocol<RpcRequest>();
-        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType));
         RpcRequest request = new RpcRequest();
         request.setClassName(className);
         request.setMethodName(methodName);
         request.setParameters(args);
         request.setVersion(this.serviceVersion);
         request.setGroup(this.serviceGroup);
-
         Class[] parameterTypes = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
-            parameterTypes[i] = args[i].getClass();
+            parameterTypes[i] = getClassType(args[i]);
         }
         request.setParameterTypes(parameterTypes);
+
+        requestRpcProtocol.setHeader(RpcHeaderFactory.getRequestHeader(serializationType));
         requestRpcProtocol.setBody(request);
 
         return requestRpcProtocol;
     }
 
-
     /**
-     * 返回传入的类型
-     */
-    private Class<?> getClassType(Object obj){
-        Class<?> classType = obj.getClass();
-        String typeName = classType.getName();
-        return switch (typeName) {
-            case "java.lang.Integer" -> Integer.TYPE;
-            case "java.lang.Long" -> Long.TYPE;
-            case "java.lang.Float" -> Float.TYPE;
-            case "java.lang.Double" -> Double.TYPE;
-            case "java.lang.Character" -> Character.TYPE;
-            case "java.lang.Boolean" -> Boolean.TYPE;
-            case "java.lang.Short" -> Short.TYPE;
-            case "java.lang.Byte" -> Byte.TYPE;
-            default -> classType;
-        };
-    }
-
-    /**
-     * 构建RPC请求
+     * 构建RPC请求（协议体）
      */
     private RpcRequest getRpcRequest(Method method, Object[] args) {
         RpcRequest request = new RpcRequest();
@@ -223,6 +206,27 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
         request.setOneway(oneway);
         return request;
     }
+
+    /**
+     * 返回传入的类型
+     */
+    private Class<?> getClassType(Object obj){
+        Class<?> classType = obj.getClass();
+        String typeName = classType.getName();
+        return switch (typeName) {
+            case "java.lang.Integer" -> Integer.TYPE;
+            case "java.lang.Long" -> Long.TYPE;
+            case "java.lang.Float" -> Float.TYPE;
+            case "java.lang.Double" -> Double.TYPE;
+            case "java.lang.Character" -> Character.TYPE;
+            case "java.lang.Boolean" -> Boolean.TYPE;
+            case "java.lang.Short" -> Short.TYPE;
+            case "java.lang.Byte" -> Byte.TYPE;
+            default -> classType;
+        };
+    }
+
+
 
 
 }
