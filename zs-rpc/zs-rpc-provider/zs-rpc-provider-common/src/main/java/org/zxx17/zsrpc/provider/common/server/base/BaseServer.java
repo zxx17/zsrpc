@@ -18,6 +18,9 @@ import org.zxx17.zsrpc.codec.RpcEncoder;
 import org.zxx17.zsrpc.common.threadpool.ServerThreadPool;
 import org.zxx17.zsrpc.provider.common.handler.RpcProviderHandler;
 import org.zxx17.zsrpc.provider.common.server.api.Server;
+import org.zxx17.zsrpc.registry.api.RegistryService;
+import org.zxx17.zsrpc.registry.api.config.RegistryConfig;
+import org.zxx17.zsrpc.registry.zk.ZookeeperRegistryService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +28,11 @@ import java.util.Map;
 public class BaseServer implements Server {
 
     private final Logger logger = LoggerFactory.getLogger(BaseServer.class);
+
+    /**
+     * 注册中心
+     */
+    protected RegistryService registryService;
 
     /**
      * 服务器地址
@@ -47,13 +55,32 @@ public class BaseServer implements Server {
     private final String reflectType;
 
 
-    public BaseServer(String serverAddress, String reflectType) {
-        if (!StringUtils.isEmpty(serverAddress)) {
+    public BaseServer(String serverAddress, String registryAddress, String registryType, String reflectType){
+        if (!StringUtils.isEmpty(serverAddress)){
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
             this.port = Integer.parseInt(serverArray[1]);
         }
         this.reflectType = reflectType;
+        this.registryService = this.getRegistryService(registryAddress, registryType);
+    }
+
+    /**
+     * 获取注册中心服务
+     * @param registryAddress 注册中心地址
+     * @param registryType 注册中心类型
+     * @return 注册中心服务
+     */
+    private RegistryService getRegistryService(String registryAddress, String registryType) {
+        //TODO 后续扩展支持SPI
+        RegistryService registryService = null;
+        try {
+            registryService = new ZookeeperRegistryService();
+            registryService.init(new RegistryConfig(registryAddress, registryType));
+        }catch (Exception e){
+            logger.error("RPC Server init error", e);
+        }
+        return registryService;
     }
 
     /**
