@@ -9,6 +9,7 @@ import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.proxy.api.async.IAsyncObjectProxy;
 import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
 import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
+import org.zxx17.zsrpc.registry.api.RegistryService;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2024/7/6
  **/
-public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
+public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
 
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectProxy.class);
@@ -62,13 +63,19 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
      */
     private boolean oneway;
 
+    /**
+     * 注册中心
+     */
+    private RegistryService registryService;
+
     public ObjectProxy(Class<T> clazz) {
         this.clazz = clazz;
     }
 
     public ObjectProxy(Class<T> clazz,
                        String serviceVersion, String serviceGroup,
-                       String serializationType, long timeout, Consumer consumer,
+                       String serializationType, long timeout,
+                       RegistryService registryService, Consumer consumer,
                        boolean async, boolean oneway) {
         this.clazz = clazz;
         this.serviceVersion = serviceVersion;
@@ -78,6 +85,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
         this.serializationType = serializationType;
         this.async = async;
         this.oneway = oneway;
+        this.registryService = registryService;
     }
 
     @Override
@@ -131,7 +139,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
         }
 
         // 发送RPC请求，并获取一个RPCFuture对象，用于异步等待响应
-        RpcFuture rpcFuture = this.consumer.sendRequest(requestRpcProtocol);
+        RpcFuture rpcFuture = this.consumer.sendRequest(requestRpcProtocol, registryService);
 
         // 根据RPCFuture对象获取响应结果
         // 如果rpcFuture为null，返回null
@@ -143,8 +151,9 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
 
     /**
      * 动态代理异步调用
+     *
      * @param method 方法名
-     * @param args 参数
+     * @param args   参数
      * @return RpcFuture
      */
     @Override
@@ -152,9 +161,9 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
         RpcProtocol<RpcRequest> rpcProtocol = createRpcProtocol(clazz.getName(), method, args);
         RpcFuture future = null;
         try {
-            future = this.consumer.sendRequest(rpcProtocol);
-        }catch (Exception e){
-           logger.error("async call exception: {}", e);
+            future = this.consumer.sendRequest(rpcProtocol, registryService);
+        } catch (Exception e) {
+            logger.error("async call exception: {}", e);
         }
         return future;
     }
@@ -210,7 +219,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
     /**
      * 返回传入的类型
      */
-    private Class<?> getClassType(Object obj){
+    private Class<?> getClassType(Object obj) {
         Class<?> classType = obj.getClass();
         String typeName = classType.getName();
         return switch (typeName) {
@@ -225,8 +234,6 @@ public class ObjectProxy<T> implements IAsyncObjectProxy ,InvocationHandler {
             default -> classType;
         };
     }
-
-
 
 
 }

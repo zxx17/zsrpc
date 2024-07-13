@@ -23,6 +23,12 @@
             <artifactId>zs-rpc-consumer-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-registry-zookeeper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

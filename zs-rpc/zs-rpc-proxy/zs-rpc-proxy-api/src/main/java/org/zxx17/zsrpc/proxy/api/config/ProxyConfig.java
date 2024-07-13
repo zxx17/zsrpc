@@ -1,6 +1,7 @@
 package org.zxx17.zsrpc.proxy.api.config;
 
 import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
+import org.zxx17.zsrpc.registry.api.RegistryService;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -48,9 +49,14 @@ public class ProxyConfig<T> implements Serializable {
      * 是否单向调用
      */
     private boolean oneway;
+    /**
+     * 服务注册与发现接口
+     */
+    private RegistryService registryService;
 
     public ProxyConfig(Class<T> clazz, String serviceVersion,
-                       String serviceGroup, long timeout, Consumer consumer,
+                       String serviceGroup, long timeout,
+                       RegistryService registryService, Consumer consumer,
                        String serializationType, boolean async, boolean oneway) {
         this.clazz = clazz;
         this.serviceVersion = serviceVersion;
@@ -60,6 +66,7 @@ public class ProxyConfig<T> implements Serializable {
         this.serializationType = serializationType;
         this.async = async;
         this.oneway = oneway;
+        this.registryService = registryService;
     }
 
     public Class<T> getClazz() {
@@ -124,5 +131,13 @@ public class ProxyConfig<T> implements Serializable {
 
     public void setOneway(boolean oneway) {
         this.oneway = oneway;
+    }
+
+    public RegistryService getRegistryService() {
+        return registryService;
+    }
+
+    public void setRegistryService(RegistryService registryService) {
+        this.registryService = registryService;
     }
 }

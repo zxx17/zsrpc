@@ -8,13 +8,17 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zxx17.zsrpc.common.helper.RpcServiceHelper;
 import org.zxx17.zsrpc.common.threadpool.ClientThreadPool;
 import org.zxx17.zsrpc.consumer.common.handler.RpcConsumerHandler;
+import org.zxx17.zsrpc.consumer.common.helper.RpcConsumerHandlerHelper;
 import org.zxx17.zsrpc.consumer.common.initializer.RpcConsumerInitializer;
 import org.zxx17.zsrpc.protocol.RpcProtocol;
+import org.zxx17.zsrpc.protocol.meta.ServiceMeta;
 import org.zxx17.zsrpc.protocol.request.RpcRequest;
 import org.zxx17.zsrpc.proxy.api.consumer.Consumer;
 import org.zxx17.zsrpc.proxy.api.future.RpcFuture;
+import org.zxx17.zsrpc.registry.api.RegistryService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,6 +59,7 @@ public class RpcConsumer implements Consumer {
 
     public void close() {
         eventLoopGroup.shutdownGracefully();
+        RpcConsumerHandlerHelper.closeRpcClientHandler();
         ClientThreadPool.shutdown();
     }
 
@@ -62,25 +67,28 @@ public class RpcConsumer implements Consumer {
      * 向服务提供者发送请求 并获取响应
      */
     @Override
-    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws InterruptedException {
-        //TODO 先写死，后面在引入注册中心时，从注册中心获取
-        String serviceAddress = "127.0.0.1";
-        int port = 27880;
-
-        String key = serviceAddress.concat("_").concat(String.valueOf(port));
-        RpcConsumerHandler handler = handlerMap.get(key);
-        //缓存中无RpcClientHandler
-        if (handler == null) {
-            handler = getRpcConsumerHandler(serviceAddress, port);
-            handlerMap.put(key, handler);
-        } else if (!handler.getChannel().isActive()) {
-            handler.close();
-            handler = getRpcConsumerHandler(serviceAddress, port);
-            handlerMap.put(key, handler);
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol,
+                                 RegistryService registryService) throws Exception {
+        RpcRequest request = protocol.getBody();
+        String serviceKey = RpcServiceHelper.buildServiceKey(request.getClassName(), request.getVersion(), request.getGroup());
+        Object[] params = request.getParameters();
+        int invokerHashCode = (params == null || params.length == 0) ? serviceKey.hashCode() : params[0].hashCode();
+        ServiceMeta serviceMeta = registryService.discovery(serviceKey, invokerHashCode);
+        if (serviceMeta != null) {
+            RpcConsumerHandler handler = RpcConsumerHandlerHelper.get(serviceMeta);
+            //缓存中无RpcClientHandler
+            if (handler == null) {
+                handler = getRpcConsumerHandler(serviceMeta.getServiceAddr(), serviceMeta.getServicePort());
+                RpcConsumerHandlerHelper.put(serviceMeta, handler);
+            } else if (!handler.getChannel().isActive()) {
+                //缓存中存在RpcClientHandler，但不活跃
+                handler.close();
+                handler = getRpcConsumerHandler(serviceMeta.getServiceAddr(), serviceMeta.getServicePort());
+                RpcConsumerHandlerHelper.put(serviceMeta, handler);
+            }
+            return handler.sendRequest(protocol, request.getAsync(), request.getOneway());
         }
-        return handler.sendRequest(protocol,
-                protocol.getBody().getAsync(),
-                protocol.getBody().getOneway());
+        return null;
     }
 
     /**

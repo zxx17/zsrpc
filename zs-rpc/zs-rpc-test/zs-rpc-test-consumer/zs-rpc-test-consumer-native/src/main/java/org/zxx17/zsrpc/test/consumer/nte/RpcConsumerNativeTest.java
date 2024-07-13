@@ -1,5 +1,6 @@
 package org.zxx17.zsrpc.test.consumer.nte;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.zxx17.zsrpc.consumer.nte.RpcClient;
 import org.zxx17.zsrpc.proxy.api.async.IAsyncObjectProxy;
@@ -17,30 +18,27 @@ import java.util.concurrent.ExecutionException;
  **/
 public class RpcConsumerNativeTest {
 
+    private RpcClient rpcClient;
 
-    /**
-     * testInterfaceRpc()
-     */
+    @Before
+    public void initRpcClient() {
+        rpcClient = new RpcClient("120.26.210.135:2181",
+                "zookeeper", "1.0.0",
+                "test", "jdk", 3000, false, false);
+    }
+
     @Test
-    public void testSync() {
-        RpcClient rpcClient = new RpcClient("1.0.0", "test",
-                "jdk", 3000, false, false);
+    public void testInterfaceRpc() {
         DemoService demoService = rpcClient.create(DemoService.class);
-
         String result = demoService.hello("zxx17");
-        System.err.println("返回的结果数据===>>> " + result);
+        System.out.println("result>>>>>>>>>>>>" + result);
         rpcClient.shutdown();
     }
 
-
     @Test
-    public void testAsync() throws ExecutionException, InterruptedException {
-        RpcClient rpcClient = new RpcClient("1.0.0", "test",
-                "jdk", 3000, true, false);
-        IAsyncObjectProxy async = rpcClient.createAsync(DemoService.class);
-        RpcFuture call = async.call("hello", "zxx17");
-        System.err.println("返回的结果数据===>>> " + call.get());
-        rpcClient.shutdown();
+    public void testInterfaceRpcAsync() throws ExecutionException, InterruptedException {
+        IAsyncObjectProxy rpcClientAsync = rpcClient.createAsync(DemoService.class);
+        RpcFuture call = rpcClientAsync.call("hello", "zxx17");
     }
 
 

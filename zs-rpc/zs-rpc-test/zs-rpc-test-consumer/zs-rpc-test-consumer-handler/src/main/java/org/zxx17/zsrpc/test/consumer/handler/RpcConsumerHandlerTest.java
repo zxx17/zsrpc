@@ -24,7 +24,7 @@ public class RpcConsumerHandlerTest {
 
     public static void main(String[] args) throws Exception {
         RpcConsumer rpcConsumer = RpcConsumer.getInstance();
-        RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
+//        RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
 //        System.out.println("测试消费者直接请求后直接获取数据===>" + rpcFuture.get());
 //        System.out.println("如果是异步调用上面rpcFuture是null，从RpcContext获取结果"+ RpcContext.getContext().getRPCFuture().get());
         System.out.println("如果是单向调用上面都是null");
@@ -35,18 +35,18 @@ public class RpcConsumerHandlerTest {
     @Test
     public void testConsumerAsyncCallBack() throws Exception {
         RpcConsumer rpcConsumer = RpcConsumer.getInstance();
-        RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
-        rpcFuture.addAsyncCallBack(new AsyncRpcCallBack() {
-            @Override
-            public void onSuccess(Object result) {
-                System.out.println("异步回调成功===>" + result);
-            }
-
-            @Override
-            public void onException(Throwable throwable) {
-                System.out.println("异步回调失败===>" + throwable);
-            }
-        });
+//        RpcFuture rpcFuture = rpcConsumer.sendRequest(getRpcRequestProtocol());
+//        rpcFuture.addAsyncCallBack(new AsyncRpcCallBack() {
+//            @Override
+//            public void onSuccess(Object result) {
+//                System.out.println("异步回调成功===>" + result);
+//            }
+//
+//            @Override
+//            public void onException(Throwable throwable) {
+//                System.out.println("异步回调失败===>" + throwable);
+//            }
+//        });
         Thread.sleep(200);
         rpcConsumer.close();
     }
