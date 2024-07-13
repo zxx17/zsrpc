@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * .
+ * Zookeeper注册中心服务实现类，用于服务的注册、发现和注销。.
  *
  * @author Xinxuan Zhuo
  * @version 1.0.0
@@ -26,13 +26,21 @@ import java.util.Random;
  **/
 public class ZookeeperRegistryService implements RegistryService {
 
+    // 定义重试策略的基础睡眠时间（毫秒）
     public static final int BASE_SLEEP_TIME_MS = 1000;
+    // 定义最大重试次数
     public static final int MAX_RETRIES = 3;
+    // Zookeeper的根路径
     public static final String ZK_BASE_PATH = "/zs_rpc";
 
+    // 服务发现对象，用于与Zookeeper交互
     private ServiceDiscovery<ServiceMeta> serviceDiscovery;
 
-
+    /**
+     * 初始化方法，创建并启动Curator客户端，构建服务发现器。
+     * @param registryConfig 注册中心配置
+     * @throws Exception 异常抛出
+     */
     @Override
     public void init(RegistryConfig registryConfig) throws Exception {
         CuratorFramework client = CuratorFrameworkFactory.newClient(
@@ -48,6 +56,11 @@ public class ZookeeperRegistryService implements RegistryService {
         this.serviceDiscovery.start();
     }
 
+    /**
+     * 注册服务到Zookeeper。
+     * @param serviceMeta 服务元数据
+     * @throws Exception 异常抛出
+     */
     @Override
     public void register(ServiceMeta serviceMeta) throws Exception {
         ServiceInstance<ServiceMeta> serviceInstance = ServiceInstance
@@ -60,6 +73,11 @@ public class ZookeeperRegistryService implements RegistryService {
         serviceDiscovery.registerService(serviceInstance);
     }
 
+    /**
+     * 从Zookeeper中注销服务。
+     * @param serviceMeta 服务元数据
+     * @throws Exception 异常抛出
+     */
     @Override
     public void unRegister(ServiceMeta serviceMeta) throws Exception {
         ServiceInstance<ServiceMeta> serviceInstance = ServiceInstance
@@ -72,6 +90,13 @@ public class ZookeeperRegistryService implements RegistryService {
         serviceDiscovery.unregisterService(serviceInstance);
     }
 
+    /**
+     * 从Zookeeper中发现服务。
+     * @param serviceName 服务名称
+     * @param invokerHashCode 调用者哈希码，此处未使用
+     * @return 返回服务元数据
+     * @throws Exception 异常抛出
+     */
     @Override
     public ServiceMeta discovery(String serviceName, int invokerHashCode) throws Exception {
         Collection<ServiceInstance<ServiceMeta>> serviceInstances = serviceDiscovery.queryForInstances(serviceName);
@@ -80,16 +105,19 @@ public class ZookeeperRegistryService implements RegistryService {
             return instance.getPayload();
         }
         return null;
-
     }
 
+    /**
+     * 销毁服务发现器，关闭资源。
+     * @throws IOException IO异常抛出
+     */
     @Override
     public void destroy() throws IOException {
         serviceDiscovery.close();
     }
 
     /**
-     * 随机选择一个服务实例
+     * 随机选择一个服务实例。
      * @param serviceInstances 服务实例列表
      * @return 服务实例
      */
@@ -103,3 +131,4 @@ public class ZookeeperRegistryService implements RegistryService {
     }
 
 }
+
