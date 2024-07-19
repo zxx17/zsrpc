@@ -39,6 +39,8 @@ public class RpcConsumerNativeTest {
     public void testInterfaceRpcAsync() throws ExecutionException, InterruptedException {
         IAsyncObjectProxy rpcClientAsync = rpcClient.createAsync(DemoService.class);
         RpcFuture call = rpcClientAsync.call("hello", "zxx17");
+        Object o = call.get();
+        System.out.println("result>>>>>>>>>>>>" + o);
     }
 
 
