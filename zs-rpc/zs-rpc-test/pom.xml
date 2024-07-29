@@ -17,6 +17,7 @@
         <module>zs-rpc-test-api</module>
         <module>zs-rpc-test-consumer</module>
         <module>zs-rpc-test-registry</module>
+        <module>zs-rpc-test-spi</module>
     </modules>
 
     <dependencies>

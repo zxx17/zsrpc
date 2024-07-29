@@ -21,6 +21,7 @@
         <module>zs-rpc-proxy</module>
         <module>zs-rpc-registry</module>
         <module>zs-rpc-loadbalancer</module>
+        <module>zs-rpc-spi</module>
     </modules>
 
     <properties>
