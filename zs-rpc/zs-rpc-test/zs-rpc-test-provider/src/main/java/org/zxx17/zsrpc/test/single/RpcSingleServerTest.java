@@ -8,7 +8,7 @@ public class RpcSingleServerTest {
     @Test
     public void startRpcSingleServer(){
         RpcSingleServer singleServer = new RpcSingleServer("127.0.0.1:27880",
-                "120.26.210.135:2181", "zookeeper",
+                "101.91.117.127:19671", "zookeeper",
                 "org.zxx17.zsrpc.test", "jdk");
         singleServer.startNettyServer();
     }

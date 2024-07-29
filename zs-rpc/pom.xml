@@ -20,6 +20,7 @@
         <module>zs-rpc-consumer</module>
         <module>zs-rpc-proxy</module>
         <module>zs-rpc-registry</module>
+        <module>zs-rpc-loadbalancer</module>
     </modules>
 
     <properties>

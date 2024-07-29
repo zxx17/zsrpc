@@ -8,6 +8,8 @@ import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.zxx17.zsrpc.common.helper.RpcServiceHelper;
+import org.zxx17.zsrpc.loadbalancer.api.ServiceLoadBalance;
+import org.zxx17.zsrpc.loadbalancer.random.RandomServiceLoadBalancer;
 import org.zxx17.zsrpc.protocol.meta.ServiceMeta;
 import org.zxx17.zsrpc.registry.api.RegistryService;
 import org.zxx17.zsrpc.registry.api.config.RegistryConfig;
@@ -15,7 +17,6 @@ import org.zxx17.zsrpc.registry.api.config.RegistryConfig;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Zookeeper注册中心服务实现类，用于服务的注册、发现和注销。.
@@ -36,6 +37,9 @@ public class ZookeeperRegistryService implements RegistryService {
     // 服务发现对象，用于与Zookeeper交互
     private ServiceDiscovery<ServiceMeta> serviceDiscovery;
 
+    // 负载均衡策略
+    private ServiceLoadBalance<ServiceInstance<ServiceMeta>> serviceLoadBalance;
+
     /**
      * 初始化方法，创建并启动Curator客户端，构建服务发现器。
      * @param registryConfig 注册中心配置
@@ -43,6 +47,7 @@ public class ZookeeperRegistryService implements RegistryService {
      */
     @Override
     public void init(RegistryConfig registryConfig) throws Exception {
+        this.serviceLoadBalance = new RandomServiceLoadBalancer<>();
         CuratorFramework client = CuratorFrameworkFactory.newClient(
                 registryConfig.getRegistryAddr(),
                 new ExponentialBackoffRetry(BASE_SLEEP_TIME_MS, MAX_RETRIES));
@@ -100,7 +105,7 @@ public class ZookeeperRegistryService implements RegistryService {
     @Override
     public ServiceMeta discovery(String serviceName, int invokerHashCode) throws Exception {
         Collection<ServiceInstance<ServiceMeta>> serviceInstances = serviceDiscovery.queryForInstances(serviceName);
-        ServiceInstance<ServiceMeta> instance = this.selectOneServiceInstance((List<ServiceInstance<ServiceMeta>>) serviceInstances);
+        ServiceInstance<ServiceMeta> instance = serviceLoadBalance.select((List<ServiceInstance<ServiceMeta>>) serviceInstances, invokerHashCode);
         if (instance != null) {
             return instance.getPayload();
         }
@@ -116,19 +121,6 @@ public class ZookeeperRegistryService implements RegistryService {
         serviceDiscovery.close();
     }
 
-    /**
-     * 随机选择一个服务实例。
-     * @param serviceInstances 服务实例列表
-     * @return 服务实例
-     */
-    private ServiceInstance<ServiceMeta> selectOneServiceInstance(List<ServiceInstance<ServiceMeta>> serviceInstances) {
-        if (serviceInstances == null || serviceInstances.isEmpty()) {
-            return null;
-        }
-        Random random = new Random();
-        int index = random.nextInt(serviceInstances.size());
-        return serviceInstances.get(index);
-    }
 
 }
 

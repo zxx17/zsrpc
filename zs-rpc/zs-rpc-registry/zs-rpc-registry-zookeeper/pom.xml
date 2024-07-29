@@ -25,6 +25,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-loadbalancer-random</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Curator 框架核心库，提供了与 ZooKeeper 交互的高级API -->
         <dependency>
             <groupId>org.apache.curator</groupId>

@@ -36,7 +36,7 @@ public class ZookeeperRegistryTest {
     }
     @Test
     public void testDiscovery() throws Exception {
-        ServiceMeta discovery = this.registryService.discovery(RegistryService.class.getName(), "zxx17".hashCode());
+        ServiceMeta discovery = this.registryService.discovery(ZookeeperRegistryTest.class.getName(), "zxx17".hashCode());
         System.out.println(discovery);
     }
     @Test

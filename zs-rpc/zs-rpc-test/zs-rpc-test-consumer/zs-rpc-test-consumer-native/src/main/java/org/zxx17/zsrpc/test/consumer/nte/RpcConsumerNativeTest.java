@@ -22,7 +22,7 @@ public class RpcConsumerNativeTest {
 
     @Before
     public void initRpcClient() {
-        rpcClient = new RpcClient("120.26.210.135:2181",
+        rpcClient = new RpcClient("101.91.117.127:19671",
                 "zookeeper", "1.0.0",
                 "test", "jdk", 3000, false, false);
     }
