@@ -34,7 +34,6 @@ public class RpcEncoder extends MessageToByteEncoder<RpcProtocol<Object>> implem
     protected void encode(ChannelHandlerContext channelHandlerContext,
                           RpcProtocol<Object> msg, ByteBuf byteBuf) throws Exception {
         // 获取Rpc请求头
-        // 获取Rpc请求头
         RpcHeader header = msg.getHeader();
         // 写入协议头的魔法数
         byteBuf.writeShort(header.getMagic());
@@ -47,8 +46,7 @@ public class RpcEncoder extends MessageToByteEncoder<RpcProtocol<Object>> implem
         // 获取序列化类型
         String serializationType = header.getSerializationType();
         // 获取序列化器实例
-        //TODO Serialization是扩展点
-        Serialization serialization = getJdkSerialization();
+        Serialization serialization = getJdkSerialization(serializationType);
         // 将序列化类型字符串填充至固定长度，并写入ByteBuf
         byteBuf.writeBytes(SerializationUtils.paddingString(serializationType).getBytes(StandardCharsets.UTF_8));
         // 序列化消息体，并写入ByteBuf的长度

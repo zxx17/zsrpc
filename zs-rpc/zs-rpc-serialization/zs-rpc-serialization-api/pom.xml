@@ -22,6 +22,18 @@
             <artifactId>zs-rpc-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-constant</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
