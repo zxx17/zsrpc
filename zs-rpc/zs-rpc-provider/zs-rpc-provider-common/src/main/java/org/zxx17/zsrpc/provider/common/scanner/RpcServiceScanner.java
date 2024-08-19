@@ -19,11 +19,13 @@ public class RpcServiceScanner extends ClassScanner {
 
 
     /**
-     * 扫描指定包下的类，并筛选使用@RpcService注解标注的类
-     *
-     * @param scanPackage 扫描的包
-     * @return @RpcService注解标注的实现类放入一个Map缓存
-     * @throws Exception 异常
+     * 扫描指定包下的类，并筛选使用@RpcService注解标注的类，并注册到注册中心
+     * @param host 服务地址
+     * @param port 服务端口
+     * @param scanPackage 扫描包名
+     * @param registryService 注册中心
+     * @return 所有服务对象的map集合
+     * @throws Exception exception
      */
     public static Map<String, Object> doScannerWithRpcServiceAnnotationFilterAndRegistryService(
             String host, int port,
@@ -57,7 +59,7 @@ public class RpcServiceScanner extends ClassScanner {
                             declaredConstructor.newInstance());
                 }
             } catch (Exception e) {
-                logger.error("ZS-RPC scan classes throws exception: {}", e);
+                logger.error("ZS-RPC scan classes throws exception: {},{}", e, e.getMessage());
             }
         });
         return handlerMap;

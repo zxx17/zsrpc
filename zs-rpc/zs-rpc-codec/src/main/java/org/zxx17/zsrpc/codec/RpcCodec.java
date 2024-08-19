@@ -17,7 +17,7 @@ public interface RpcCodec {
      * @param serializationType 序列化类型
      * @return 序列化对象
      */
-    default Serialization getJdkSerialization(String serializationType){
+    default Serialization getSerialization(String serializationType){
         return ExtensionLoader.getExtension(Serialization.class, serializationType);
     }
 
