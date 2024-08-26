@@ -49,7 +49,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
                     RpcHeader header = protocol.getHeader();
                     header.setMsgType((byte) RpcType.RESPONSE.getType());
                     RpcRequest request = protocol.getBody();
-                    logger.debug("ZS-RPC Receive Request ID: " + header.getRequestId());
+                    logger.debug("zs-rpc receive request id: " + header.getRequestId());
                     RpcProtocol<RpcResponse> responseRpcProtocol = new RpcProtocol<RpcResponse>();
                     RpcResponse response = new RpcResponse();
                     try {
@@ -62,7 +62,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
                     } catch (Throwable t) {
                         response.setError(t.toString());
                         header.setStatus((byte) RpcStatus.FAIL.getCode());
-                        logger.error("ZS-RPC Server handle request error", t);
+                        logger.error("zs-rpc server handle request error", t);
                     }
                     responseRpcProtocol.setHeader(header);
                     responseRpcProtocol.setBody(response);
@@ -70,9 +70,9 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
                         @Override
                         public void operationComplete(ChannelFuture channelFuture) throws Exception {
                             if (channelFuture.isSuccess()) {
-                                logger.debug("ZS-RPC Send Response ID: " + header.getRequestId());
+                                logger.debug("zs-rpc send response id: " + header.getRequestId());
                             } else {
-                                logger.error("ZS-RPC Send Response Error ID: " + header.getRequestId());
+                                logger.error("zs-rpc send response error id: " + header.getRequestId());
                             }
                         }
                     });

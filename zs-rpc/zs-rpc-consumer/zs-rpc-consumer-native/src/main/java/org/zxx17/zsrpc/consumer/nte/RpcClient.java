@@ -76,7 +76,7 @@ public class RpcClient {
         try {
             registryService.init(new RegistryConfig(registryAddress, registryType));
         } catch (Exception e) {
-            logger.error("RpcClient init registry service throws exception:{}", e);
+            logger.error("RpcClient init registry service throws exception:{} {}", e, e.getMessage());
             throw new RegistryException(e.getMessage(), e);
         }
         return registryService;

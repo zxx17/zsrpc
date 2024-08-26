@@ -60,6 +60,7 @@ public class JdkProxyFactory<T> extends BaseProxyFactory<T> implements ProxyFact
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz) {
         return (T) Proxy.newProxyInstance(
                 clazz.getClassLoader(),

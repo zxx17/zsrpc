@@ -24,7 +24,7 @@ public class RpcConsumerNativeTest {
     public void initRpcClient() {
         rpcClient = new RpcClient("101.91.117.127:19671",
                 "zookeeper", "1.0.0",
-                "test", "json", 3000, false, false);
+                "test", "hessian2", 3000, false, false);
     }
 
     @Test

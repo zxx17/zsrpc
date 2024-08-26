@@ -1,0 +1,1 @@
+kryo=org.zxx17.zsrpc.serialization.kryo.KryoSerialization

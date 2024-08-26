@@ -38,6 +38,30 @@
 
         <dependency>
             <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-serialization-hessian2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-serialization-fst</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-serialization-kryo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-serialization-protostuff</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
             <artifactId>zs-rpc-spi</artifactId>
             <version>${project.version}</version>
         </dependency>

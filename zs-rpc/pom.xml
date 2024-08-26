@@ -40,9 +40,9 @@
         <cglib.version>3.3.0</cglib.version>
         <jackson.version>2.17.1</jackson.version>
         <javassist.version>3.30.1-GA</javassist.version>
-        <hessian.version>4.0.63</hessian.version>
-        <kyro.version>5.2.0</kyro.version>
-        <fst.version>2.57</fst.version>
+        <hessian.version>4.0.66</hessian.version>
+        <kyro.version>5.6.0</kyro.version>
+        <fst.version>3.0.3</fst.version>
         <spring.boot.version>3.2.6</spring.boot.version>
         <fastjson2.version>2.0.51</fastjson2.version>
     </properties>

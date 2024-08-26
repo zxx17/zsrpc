@@ -15,6 +15,10 @@
         <module>zs-rpc-serialization-api</module>
         <module>zs-rpc-serialization-jdk</module>
         <module>zs-rpc-serialization-json</module>
+        <module>zs-rpc-serialization-hessian2</module>
+        <module>zs-rpc-serialization-fst</module>
+        <module>zs-rpc-serialization-kryo</module>
+        <module>zs-rpc-serialization-protostuff</module>
     </modules>
 
     <properties>
