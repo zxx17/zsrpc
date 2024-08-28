@@ -9,10 +9,10 @@ import org.zxx17.zsrpc.proxy.api.ProxyFactory;
 import org.zxx17.zsrpc.proxy.api.async.IAsyncObjectProxy;
 import org.zxx17.zsrpc.proxy.api.config.ProxyConfig;
 import org.zxx17.zsrpc.proxy.api.object.ObjectProxy;
-import org.zxx17.zsrpc.proxy.jdk.JdkProxyFactory;
 import org.zxx17.zsrpc.registry.api.RegistryService;
 import org.zxx17.zsrpc.registry.api.config.RegistryConfig;
 import org.zxx17.zsrpc.registry.zk.ZookeeperRegistryService;
+import org.zxx17.zsrpc.spi.loader.ExtensionLoader;
 
 /**
  * .
@@ -36,6 +36,10 @@ public class RpcClient {
      */
     private String serializationType;
     /**
+     * 动态代理方法
+     */
+    private String proxy;
+    /**
      * 超时时间
      */
     private long timeout;
@@ -48,6 +52,8 @@ public class RpcClient {
      */
     private boolean oneway;
 
+
+
     /**
      * 服务注册与发现接口
      */
@@ -55,12 +61,13 @@ public class RpcClient {
 
     public RpcClient(String registryAddress, String registryType,
                      String serviceVersion, String serviceGroup,
-                     String serializationType,
+                     String serializationType,String proxy,
                      long timeout, boolean async, boolean oneway) {
         this.serviceVersion = serviceVersion;
         this.timeout = timeout;
         this.serviceGroup = serviceGroup;
         this.serializationType = serializationType;
+        this.proxy = proxy;
         this.async = async;
         this.oneway = oneway;
         this.registryService = this.getRegistryService(registryAddress, registryType);
@@ -83,8 +90,8 @@ public class RpcClient {
     }
 
     public <T> T create(Class<T> interfaceClass) {
-        ProxyFactory proxyFactory = new JdkProxyFactory<T>();
-        proxyFactory.init(new ProxyConfig(interfaceClass, serviceVersion, serviceGroup,
+        ProxyFactory proxyFactory = ExtensionLoader.getExtension(ProxyFactory.class, proxy);
+        proxyFactory.init(new ProxyConfig<>(interfaceClass, serviceVersion, serviceGroup,
                 timeout, registryService, RpcConsumer.getInstance(), serializationType, async, oneway));
         return proxyFactory.getProxy(interfaceClass);
     }

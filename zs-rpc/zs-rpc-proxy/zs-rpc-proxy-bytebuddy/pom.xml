@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>zs-rpc-proxy-api</artifactId>
+    <artifactId>zs-rpc-proxy-bytebuddy</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,22 +18,17 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-protocol</artifactId>
+            <artifactId>zs-rpc-proxy-api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-registry-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-spi</artifactId>
-            <version>${project.version}</version>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${bytebuddy.version}</version>
         </dependency>
 
     </dependencies>

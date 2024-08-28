@@ -106,7 +106,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
         Object targetService = handlerMap.get(serviceKey);
         if (targetService == null) {
-            throw new RuntimeException(String.format("ZS-RPC service not exist: %s:%s",
+            throw new RuntimeException(String.format("zs-rpc service not exist: %s:%s",
                     request.getClassName(),
                     request.getMethodName()));
         }
@@ -154,7 +154,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     private Object invokeCGLibMethod(Object targetService, Class<?> serviceClass,
                                      String methodName, Class<?>[] parameterTypes,
                                      Object[] parameters) throws InvocationTargetException {
-        logger.info("ZS-RPC use cglib reflect type invoke method...");
+        logger.info("zs-rpc use cglib reflect type invoke method...");
         FastClass serviceFastClass = FastClass.create(serviceClass);
         FastMethod serviceFastMethod = serviceFastClass.getMethod(methodName, parameterTypes);
         return serviceFastMethod.invoke(targetService, parameters);
@@ -163,7 +163,7 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<RpcProtocol<
     private Object invokeJDKMethod(Object targetService, Class<?> serviceClass,
                                    String methodName, Class<?>[] parameterTypes,
                                    Object[] parameters) throws Throwable {
-        logger.info("ZS-RPC use jdk reflect type invoke method...");
+        logger.info("zs-rpc use jdk reflect type invoke method...");
         Method method = serviceClass.getMethod(methodName, parameterTypes);
         method.setAccessible(true);
         return method.invoke(targetService, parameters);

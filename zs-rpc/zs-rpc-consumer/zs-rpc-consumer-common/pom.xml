@@ -29,6 +29,25 @@
             <artifactId>zs-rpc-proxy-jdk</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-proxy-cglib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-proxy-javassist</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.zxx17</groupId>
+            <artifactId>zs-rpc-proxy-asm</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

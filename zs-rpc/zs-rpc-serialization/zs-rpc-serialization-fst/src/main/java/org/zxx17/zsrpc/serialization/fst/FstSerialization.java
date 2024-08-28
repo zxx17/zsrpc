@@ -16,7 +16,6 @@ import org.zxx17.zsrpc.spi.annonation.SPIClass;
  * @since 2024/8/26
  **/
 @SPIClass
-@Deprecated
 public class FstSerialization implements Serialization {
 
     private final Logger logger = LoggerFactory.getLogger(FstSerialization.class);

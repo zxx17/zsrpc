@@ -14,6 +14,10 @@
     <modules>
         <module>zs-rpc-proxy-jdk</module>
         <module>zs-rpc-proxy-api</module>
+        <module>zs-rpc-proxy-cglib</module>
+        <module>zs-rpc-proxy-javassist</module>
+        <module>zs-rpc-proxy-bytebuddy</module>
+        <module>zs-rpc-proxy-asm</module>
     </modules>
 
     <properties>
