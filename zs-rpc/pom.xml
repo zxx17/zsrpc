@@ -22,6 +22,7 @@
         <module>zs-rpc-registry</module>
         <module>zs-rpc-loadbalancer</module>
         <module>zs-rpc-spi</module>
+        <module>zs-rpc-reflect</module>
     </modules>
 
     <properties>

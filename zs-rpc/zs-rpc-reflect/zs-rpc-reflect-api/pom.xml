@@ -5,36 +5,32 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.zxx17</groupId>
-        <artifactId>zs-rpc-provider</artifactId>
+        <artifactId>zs-rpc-reflect</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>zs-rpc-provider-common</artifactId>
+    <artifactId>zs-rpc-reflect-api</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-codec</artifactId>
+            <artifactId>zs-rpc-constant</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-registry-zookeeper</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-reflect-jdk</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.zxx17</groupId>
-            <artifactId>zs-rpc-reflect-cglib</artifactId>
+            <artifactId>zs-rpc-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
     </dependencies>
+
 </project>

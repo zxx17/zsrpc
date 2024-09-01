@@ -1,9 +1,9 @@
 package org.zxx17.zsrpc.proxy.cglib;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.InvocationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.InvocationHandler;
 import org.zxx17.zsrpc.proxy.api.BaseProxyFactory;
 import org.zxx17.zsrpc.proxy.api.ProxyFactory;
 import org.zxx17.zsrpc.spi.annonation.SPIClass;
@@ -26,7 +26,10 @@ public class CglibProxyFactory<T> extends BaseProxyFactory<T> implements ProxyFa
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz) {
         logger.info("use cglib-proxy");
-        enhancer.setInterfaces(new Class[]{clazz});
+//        enhancer.setInterfaces(new Class[]{clazz});
+        // 生成的代理类继承自clazz
+        enhancer.setSuperclass(clazz);
+
         enhancer.setCallback(new InvocationHandler() {
             @Override
             public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
